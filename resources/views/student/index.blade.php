@@ -12,12 +12,12 @@
         <tbody>
             @foreach($students as $student)
                 <tr>
-                    <td>{{$student->id}}</td>
-                    <td>{{$student->name}}</td>
-                    <td>{{$student->phone}}</td>
-                    <td><a href="{{ route('students.edit',$student->id)}}" class="btn btn-primary">Edit</a></td>
+                    <td>{{ $student->id }}</td>
+                    <td>{{ $student->name }}</td>
+                    <td>{{ $student->phone }}</td>
+                    <td><a href="{{ route('students.edit',$student->id) }}" class="btn btn-primary">Edit</a></td>
                     <td>
-                        <form action="{{ route('students.destroy', $student->id)}}" method="post">
+                        <form action="{{ route('students.destroy', $student->id) }}" method="post">
                             @csrf
                             @method('DELETE')
                             <button class="btn btn-danger" type="submit">Delete</button>

@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use \App\student;
+use \App\Http\Requests\StoreStudent;
+use \App\Http\Requests\UpdateStudent;
+use \App\Models\Student;
 
-class studentController extends Controller
+class StudentController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,8 +16,10 @@ class studentController extends Controller
      */
     public function index()
     {
-        $students = student::all();
-        return view('student.index', compact('students'));
+        $students = Student::all();
+        return view('student.index', [
+            'students' => $students,
+        ]);
     }
 
     /**
@@ -34,17 +38,9 @@ class studentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreStudent $request)
     {
-        $request->validate([
-            'name'=>'required',
-            'phone'=> 'required|integer'        
-        ]);
-        $student = new student([
-            'name' => $request->get('name'),
-            'phone'=> $request->get('phone')
-        ]);
-        $student->save();
+        $student = Student::create($request->all());
         return redirect()->route('students.index')->with('success');
     }
 
@@ -67,8 +63,10 @@ class studentController extends Controller
      */
     public function edit($id)
     {
-        $student = student::find($id);
-        return view('student.edit', compact('student'));
+        $student = student::findOrFail($id);
+        return view('student.edit', [
+            'student' => $student,
+        ]);
     }
 
     /**
@@ -78,16 +76,10 @@ class studentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StoreStudent $request, $id)
     {
-        $request->validate([
-            'name'=>'required',
-            'phone'=> 'required|integer'
-        ]);   
-        $student = student::find($id);
-        $student->name = $request->get('name');
-        $student->phone = $request->get('phone');
-        $student->save();
+        $student = Student::create($request->all());
+        $student->update($request->all());
         return redirect()->route('students.index')->with('success');
     }
 
@@ -99,7 +91,7 @@ class studentController extends Controller
      */
     public function destroy($id)
     {
-        $student = student::find($id);
+        $student = Student::findOrFail($id);
         $student->delete();
         return redirect()->route('students.index')->with('success');
     }
